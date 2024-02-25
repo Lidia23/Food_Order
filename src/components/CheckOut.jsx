@@ -21,13 +21,19 @@ export default function CheckOut() {
         data,
         isLoading: isSending,
         error,
-        sendRequest
+        sendRequest,
+        clearData
     } = useHttp('http://localhost:3000/orders', requestConfig);    
     
     const cartTotal = cartCtx.items.reduce((totalPrice, item) => totalPrice + item.quantity * item.price, 0)
 
     function handleHideCheckOut() {
         userProgressCtx.hideCheckOut();
+    }
+    function handleFinish(){
+        userProgressCtx.hideCheckOut();
+        cartCtx.clearCart();
+        clearData();
     }
     function handleSubmit(e) {
         e.preventDefault(); //to not just sent the request to the frontend and not to the backend
@@ -54,12 +60,12 @@ export default function CheckOut() {
         actions=<span>Sending order data...</span>
     }
     if(data && !error){
-        return <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleHideCheckOut}>
+        return <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleFinish}>
             <h2>Success</h2>
             <p>Your order was submitted successfully.</p>
             <p>We will get back to you with more via email within the next few minutes.</p>
             <p className="modal-actions">
-                <Button onClick={handleHideCheckOut}>Okay</Button>
+                <Button onClick={handleFinish}>Okay</Button>
             </p>
         </Modal>
     }
