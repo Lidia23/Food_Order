@@ -5,6 +5,8 @@ import express from 'express';
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
+
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
